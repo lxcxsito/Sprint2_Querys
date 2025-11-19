@@ -24,16 +24,22 @@ select p.precio as precio_eur, p.precio as precio_usd from producto p;
 select p.nombre ,p.precio as euros, Round(p.precio * 1.1,2) as dòlars from producto p;
 
 
-
-
-
-
 -- 6. Llista els noms (nombre) i els preus de tots els productes de la taula producto, convertint els noms a majúscula.
+select UPPER(p.nombre), p.precio from producto p;
 
 
 
 
 -- 7. Llista els noms (nombre) i els preus (precio) dels productes de la taula producto, convertint els noms a minúscula.
+select LOWER(p.nombre), p.precio from producto p;
+
+
 -- 8. Llista el nom de tots els fabricants en una columna, i en una altra columna obtingui en majúscules els dos primers caràcters del nom del fabricant (iniciales).
+select p.nombre, LEFT(UPPER(f.nombre),2) from producto p
+JOIN fabricante f on f.codigo = p.codigo_fabricante;
+
 -- 9. Llista els noms i els preus dels productes, arrodonint el valor del preu (precio)
+select p.nombre , ROUND(p.precio) from producto p;
+
 -- 10. Llista els noms i els preus de tots els productes (precio truncado) de la taula producto, truncant el valor del preu per a mostrar-lo sense cap xifra decimal.
+select p.nombre, truncate(p.precio,0) from producto p;
