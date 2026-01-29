@@ -34,8 +34,8 @@ Where p.tipo = 'profesor' AND p.nif LIKE "%K";
 
 -- 5. Retorna el llistat de les assignatures que s'imparteixen en el primer quadrimestre, 
 -- en el tercer curs del grau que té l'identificador 7. (id, nombre, cuatrimestre, curso, id_grado)
-Select * from asignatura a 
-where cuatrimestre = 1 AND a.id_grado = 7;
+Select * from asignatura a
+where cuatrimestre = 1 AND a.id_grado = 7 AND a.curso = 3;
 
 
 -- 6. Retorna un llistat dels professors/es juntament amb el nom del departament al qual estan vinculats. 
@@ -60,12 +60,12 @@ where p.nif = '26902806M';
 
 -- 8. Retorna un llistat amb el nom de tots els departaments que tenen professors/es que imparteixen
 -- alguna assignatura en el Grau en Enginyeria Informàtica (Pla 2015). (nombre)
-
-Select d.nombre from departamento d
-JOIN profesor p on p.id_departamento = d.id
-JOIN asignatura a on a.id_profesor = p.id_profesor
-JOIN grado g on g.id = a.id_grado
-WHERE g.nombre = 'Grado en Ingeniería Informática (Plan 2015)' AND a.id_profesor IS NOT NULL;
+SELECT DISTINCT d.nombre
+FROM departamento d
+JOIN profesor p ON p.id_departamento = d.id
+JOIN asignatura a ON a.id_profesor = p.id_profesor
+JOIN grado g ON g.id = a.id_grado
+WHERE g.nombre = 'Grado en Ingeniería Informática (Plan 2015)';
 
 
 
@@ -91,10 +91,11 @@ ORDER BY d.nombre, p.apellido1,p.apellido2,p.nombre ASC;
 
 
 -- 11. Retorna un llistat amb els professors/es que no estan associats a un departament. (apellido1, apellido2, nombre)
-Select ps.apellido1, ps.apellido2, ps.nombre from profesor p
-LEFT JOIN persona ps on p.id_profesor = ps.id
-LEFT JOIN departamento d on d.id = p.id_departamento
-WHERE p.id_departamento is NULL;
+SELECT ps.apellido1, ps.apellido2, ps.nombre
+FROM profesor p
+LEFT JOIN persona ps ON p.id = ps.id
+WHERE p.id_departamento IS NULL;
+
 
 
 
@@ -144,10 +145,12 @@ where YEAR(p.fecha_nacimiento) = 1999;
 -- 18. Calcula quants professors/es hi ha en cada departament. El resultat només ha de mostrar dues columnes, una amb el nom del departament 
 -- i una altra amb el nombre de professors/es que hi ha en aquest departament.
 -- El resultat només ha d'incloure els departaments que tenen professors/es associats i haurà d'estar ordenat de major a menor pel nombre de professors/es. (departamento, total)
-select d.nombre , COUNT(prs.nombre) as total from departamento d
-RIGHT join profesor p on p.id_departamento = d.id
-LEFT JOIN persona prs on prs.id = p.id_profesor
-group by d.nombre;
+SELECT d.nombre AS departamento,COUNT(p.id) AS total
+FROM departamento d
+JOIN profesor p ON p.id_departamento = d.id
+GROUP BY d.nombre
+ORDER BY total DESC;
+
 
 
 -- 19. Retorna un llistat amb tots els departaments i el nombre de professors/es que hi ha en cadascun d'ells. 
